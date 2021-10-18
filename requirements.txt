@@ -8,3 +8,12 @@ streamlit==1.0.0
 streamlit_webrtc==0.31.0
 typing_extensions==3.10.0.2
 mediapipe
+absl-py
+attrs>=19.1.0
+matplotlib
+numpy
+opencv-contrib-python
+protobuf>=3.11.4
+six
+wheel
+
