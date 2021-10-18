@@ -306,6 +306,8 @@ def app_video_filters():
 
             if self.type == "noop":
                 pass
+            if self.type =="cartoon":
+               img= mediapipe_webcam(imag=img)
             
 
             return av.VideoFrame.from_ndarray(img, format="bgr24")
