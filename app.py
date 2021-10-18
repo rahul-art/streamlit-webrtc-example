@@ -304,6 +304,8 @@ def app_video_filters():
 
         def recv(self, frame: av.VideoFrame) -> av.VideoFrame:
             img = frame.to_ndarray(format="bgr24")
+            if self.type == "noop":
+                pass
 
             out_img = mediapipe_webcam(imag=img)
 
