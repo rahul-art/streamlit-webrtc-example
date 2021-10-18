@@ -133,7 +133,7 @@ def mediapipe_webcam(imag):
                 break
         
     cap.release()
-    #cv2.destroyAllWindows()
+    cv2.destroyAllWindows()
     return img
 
 try:
