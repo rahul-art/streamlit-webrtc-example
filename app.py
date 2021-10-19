@@ -43,6 +43,8 @@ def mediapipe_webcam(imag):
 
     colors = [(245,117,16), (117,245,16), (16,117,245)]
     pTime = 0
+    windowname = "OpenCV Media Player"
+    cv2.namedWindow(windowname)
     detector = pm.poseDetector()
     count = 0
     count70 = 0
@@ -84,16 +86,18 @@ def mediapipe_webcam(imag):
 
     f=0
     k=0
-    img = imag
+    time.sleep(5)
+    cap = cv2.VideoCapture('T3.mp4')
+    img = cap.read()
     while True:
-        img = imag
+        success, img = cap.read()
         img = detector.findPose(img)
         lmlist = detector.getPosition(img,draw=False)
 
         if len(lmlist)!=0:
             cv2.circle(img,(lmlist[25][1],lmlist[25][2]),8,(255,150,0),cv2.FILLED)
             cv2.circle(img,(lmlist[23][1],lmlist[23][2]),8,(255,150,0),cv2.FILLED)
-                #print(lmlist[23])
+             #print(lmlist[23])
             y1 = lmlist[25][2]
             y2 = lmlist[23][2]
 
@@ -152,15 +156,17 @@ def mediapipe_webcam(imag):
             cv2.putText(img,"70% " + "Total Number of Squats  "+str(int(count70)),(50,100),cv2.FONT_HERSHEY_DUPLEX,0.5,
             (60,100,255),1)
 
-            #cv2.imshow(windowname,img)
+            cv2.imshow(windowname,img)
             calories = 0.32*count
 
             if cv2.waitKey(1) & 0xFF == ord('q'): 
                 break
-        
+
     cap.release()
-    #cv2.destroyAllWindows()
+    cv2.destroyAllWindows()
     return img
+
+
 # This code is based on https://github.com/streamlit/demo-self-driving/blob/230245391f2dda0cb464008195a470751c01770b/streamlit_app.py#L48  # noqa: E501
 def download_file(url, download_to: Path, expected_size=None):
     # Don't download the file twice.
@@ -614,34 +620,7 @@ def app_streaming():
             if self.type == "noop":
                 pass
             elif self.type == "cartoon":
-                # prepare color
-                img_color = cv2.pyrDown(cv2.pyrDown(img))
-                for _ in range(6):
-                    img_color = cv2.bilateralFilter(img_color, 9, 9, 7)
-                img_color = cv2.pyrUp(cv2.pyrUp(img_color))
-
-                # prepare edges
-                img_edges = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-                img_edges = cv2.adaptiveThreshold(
-                    cv2.medianBlur(img_edges, 7),
-                    255,
-                    cv2.ADAPTIVE_THRESH_MEAN_C,
-                    cv2.THRESH_BINARY,
-                    9,
-                    2,
-                )
-                img_edges = cv2.cvtColor(img_edges, cv2.COLOR_GRAY2RGB)
-
-                # combine color and edges
-                img = cv2.bitwise_and(img_color, img_edges)
-            elif self.type == "edges":
-                # perform edge detection
-                img = cv2.cvtColor(cv2.Canny(img, 100, 200), cv2.COLOR_GRAY2BGR)
-            elif self.type == "rotate":
-                # rotate image
-                rows, cols, _ = img.shape
-                M = cv2.getRotationMatrix2D((cols / 2, rows / 2), frame.time * 45, 1)
-                img = cv2.warpAffine(img, M, (cols, rows))
+               img=mediapipe_webcam(imag=img)
 
             return av.VideoFrame.from_ndarray(img, format="bgr24")
 
