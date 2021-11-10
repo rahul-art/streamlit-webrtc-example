@@ -721,4 +721,5 @@ if __name__ == "__main__":
 
     fsevents_logger = logging.getLogger("fsevents")
     fsevents_logger.setLevel(logging.WARNING)
+
     main()
